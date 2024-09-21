@@ -5,7 +5,7 @@ pipeline {
             agent { label 'IAC' }
             steps {
                 dir('terraform') {
-                    sh 'terraform destory --yes'
+                    sh 'terraform destroy --yes'
                 }
             }
         }
