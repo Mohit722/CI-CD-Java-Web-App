@@ -10,10 +10,12 @@ pipeline {
         stage('Terraform Init and Apply') {
             agent { label 'IAC' }
             steps {
-                dir('terraform') {
-                    sh 'terraform init'
-                    sh 'terraform validate'
-                    sh 'terraform apply -auto-approve'
+                withAWS(credentials: 'aws-credentials') {
+                    dir('terraform') {
+                        sh 'terraform init'
+                        sh 'terraform validate'
+                        sh 'terraform apply -auto-approve'
+                    }
                 }
             }
         }
