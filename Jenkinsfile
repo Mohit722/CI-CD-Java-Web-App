@@ -15,9 +15,8 @@ pipeline {
             steps {
                 script {
                     // Fetch the public IP from Terraform output
-                    def publicIp = sh(script: 'terraform output -raw instance_public_ip', returnStdout: true).trim()
-                    // Store the public IP in an environment variable to pass to the Ansible stage
-                    env.INSTANCE_PUBLIC_IP = publicIp
+                    env.INSTANCE_PUBLIC_IP = sh(script: 'terraform output -raw instance_public_ip', returnStdout: true).trim()
+                    echo "New instance public IP: ${env.INSTANCE_PUBLIC_IP}"
                 }
             }
         }
@@ -25,12 +24,8 @@ pipeline {
             agent { label 'CMT' } // Ansible node
             steps {
                 dir('ansible') {
-                    script {
-                        // Write the public IP to the Ansible inventory file
-                        writeFile file: 'inventory/hosts.ini', text: "[app]\n${env.INSTANCE_PUBLIC_IP}"
-                    }
-                    // Run the Ansible playbook using the dynamically created inventory
-                    sh 'ansible-playbook -i inventory/hosts.ini playbooks/deploy.yml'
+                    // Run the Ansible playbook, passing the public IP as an extra variable
+                    sh "ansible-playbook -i 'localhost,' -c local playbooks/deploy.yml -e 'instance_ip=${env.INSTANCE_PUBLIC_IP}'"
                 }
             }
         }
