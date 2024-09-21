@@ -5,10 +5,7 @@ pipeline {
             agent { label 'IAC' }
             steps {
                 dir('terraform') {
-                    sh 'terraform init'
-                    sh 'terraform validate'
-                    sh 'terraform plan'  // Optional: Preview before applying
-                    sh 'terraform apply -auto-approve'
+                    sh 'terraform destory --yes'
                 }
             }
         }
