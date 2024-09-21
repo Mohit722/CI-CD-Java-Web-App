@@ -14,6 +14,7 @@ pipeline {
                     dir('terraform') {
                         sh 'terraform init'
                         sh 'terraform validate'
+                        sh 'terraform plan'  // Add plan step for preview
                         sh 'terraform apply -auto-approve'
                     }
                 }
@@ -30,6 +31,11 @@ pipeline {
                     sh 'ansible-playbook -i inventory/hosts.ini playbooks/deploy.yml'
                 }
             }
+        }
+    }
+    post {
+        always {
+            echo 'Pipeline completed.'
         }
     }
 }
