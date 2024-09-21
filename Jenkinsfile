@@ -8,7 +8,7 @@ pipeline {
     }
     stages {
         stage('Terraform Init and Apply') {
-            agent { label 'terraform-node' }
+            agent { label 'IAC' }
             steps {
                 dir('terraform') {
                     sh 'terraform init'
@@ -17,7 +17,7 @@ pipeline {
             }
         }
         stage('Ansible Deployment') {
-            agent { label 'ansible-node' }
+            agent { label 'CMT' }
             steps {
                 dir('ansible') {
                     script {
