@@ -2,10 +2,13 @@
 - hosts: all
   become: yes
   tasks:
-    - name: Copy WAR file from Ansible controller to new instance
-      copy:
-        src: /tmp/jenkins/workspace/Build-and-Deploy/target/SpringMVCCRUDApp.war
-        dest: /var/lib/jetty9/webapps/SpringMVCCRUDApp.war
+    - name: Copy WAR files to Jetty webapps directory
+  copy:
+    src: "{{ item }}"
+    dest: /var/lib/jetty9/webapps/
+  with_fileglob:
+    - /tmp/jenkins/workspace/Build-and-Deploy/target/*.war
+
 
     - name: Restart Jetty
       service:
