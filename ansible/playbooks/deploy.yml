@@ -3,10 +3,10 @@
   become: yes
   tasks:
     - name: Copy WAR files to Jetty webapps directory
-  copy:
-    src: "{{ item }}"
-    dest: /var/lib/jetty9/webapps/
-  with_fileglob:
+    copy:
+      src: "{{ item }}"
+      dest: /var/lib/jetty9/webapps/
+    with_fileglob:
     - /tmp/jenkins/workspace/Build-and-Deploy/target/*.war
 
 
