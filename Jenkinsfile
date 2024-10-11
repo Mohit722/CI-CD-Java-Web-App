@@ -43,6 +43,9 @@ pipeline {
 
         stage('Maven Build and Test') {
             agent { label 'CMT' } // Use a Jenkins agent with Maven installed
+            when {
+                expression { params.ACTION == 'create' } // Only run if ACTION is 'create'
+            }
             steps {
                 // Clone the code from the GitHub repository
                 git url: 'https://github.com/Mohit722/vtdemo.git', branch: 'develop' // Adjust branch as needed
@@ -57,6 +60,9 @@ pipeline {
         
         stage('Ansible Deployment') {
             agent { label 'CMT' } // Ansible node
+            when {
+                expression { params.ACTION == 'create' } // Only run if ACTION is 'create'
+            }
             steps {
                 dir('ansible') {
                     // Run the Ansible playbook, passing the public IP as an extra variable                    
