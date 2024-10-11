@@ -20,22 +20,15 @@ pipeline {
                     script {
                         if (params.ACTION == 'create') {
                             sh 'terraform apply -auto-approve'
+                            // Retrieve the public IP immediately after applying
+                            env.INSTANCE_PUBLIC_IP = sh(script: 'terraform output -raw instance_public_ip', returnStdout: true).trim()
+                            echo "Public IP Retrieved: ${env.INSTANCE_PUBLIC_IP}"
                         } else if (params.ACTION == 'destroy') {
                             sh 'terraform destroy -auto-approve'
                         } else {
                             error("Invalid ACTION parameter")
                         }
                     }
-                }
-            }
-        }
-        stage('Retrieve Public IP') {
-            agent { label 'IAC' }
-            steps {
-                script {
-                    // Fetch the public IP from Terraform output
-                    env.INSTANCE_PUBLIC_IP = sh(script: 'terraform output -raw instance_public_ip', returnStdout: true).trim()
-                    echo "New instance public IP: ${env.INSTANCE_PUBLIC_IP}"
                 }
             }
         }
@@ -60,8 +53,9 @@ pipeline {
             agent { label 'CMT' } // Ansible node
             steps {
                 dir('ansible') {
-                    // Run the Ansible playbook, passing the public IP as an extra variable
-                    sh "ansible-playbook -i 'localhost,' -c local playbooks/deploy.yml -e 'instance_ip=${env.INSTANCE_PUBLIC_IP}'"
+                    // Run the Ansible playbook, passing the public IP as an extra variable                    
+                    sh "ansible-playbook -i '${env.INSTANCE_PUBLIC_IP},' -u ubuntu playbooks/deploy.yml -e 'instance_ip=${env.INSTANCE_PUBLIC_IP}'"
+
                 }
             }
         }
