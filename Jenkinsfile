@@ -48,7 +48,7 @@ pipeline {
             }
             steps {
                 // Clone the code from the GitHub repository
-                git url: 'https://github.com/Mohit722/vtdemo.git', branch: 'develop' // Adjust branch as needed
+                git url: 'https://github.com/Mohit722/vtdemo.git', branch: 'master' // Adjust branch as needed
 
                 echo "Building War Component..."
                     dir("${WORKSPACE}") { // Ensure this is the correct path within the repo
