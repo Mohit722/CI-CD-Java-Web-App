@@ -20,14 +20,14 @@ pipeline {
                 }
             }
         }
-        stage('Ansible Deployment') {
-            agent { label 'CMT' } // Ansible node
-            steps {
-                dir('ansible') {
-                    // Run the Ansible playbook, passing the public IP as an extra variable
-                    sh "ansible-playbook -i 'localhost,' -c local playbooks/deploy.yml -e 'instance_ip=${env.INSTANCE_PUBLIC_IP}'"
-                }
-            }
-        }
+        // stage('Ansible Deployment') {
+        //     agent { label 'CMT' } // Ansible node
+        //     steps {
+        //         dir('ansible') {
+        //             // Run the Ansible playbook, passing the public IP as an extra variable
+        //             sh "ansible-playbook -i 'localhost,' -c local playbooks/deploy.yml -e 'instance_ip=${env.INSTANCE_PUBLIC_IP}'"
+        //         }
+        //     }
+        // }
     }
 }
