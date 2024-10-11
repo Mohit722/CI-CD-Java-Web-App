@@ -6,6 +6,9 @@ pipeline {
     stages {
         stage('Terraform Setup and Plan') {
             agent { label 'IAC' }
+            when {
+                expression { params.ACTION == 'create' } // Only run if ACTION is 'create'
+            }
             steps {
                 dir('terraform') {
                     sh 'terraform init'
