@@ -2,29 +2,16 @@
 - hosts: all
   become: yes
   tasks:
-    - name: Install Java and Maven
-      apt:
-        name: "{{ item }}"
-        state: present
-      with_items:
-        - openjdk-11-jdk
-        - maven
-        - tomcat9
-
-    - name: Clone the repository
-      git:
-        repo: 'https://github.com/Mohit722/spring-mvc-crud.git'
-        dest: /home/ubuntu/spring-boot-app
-
-    - name: Build the application with Maven
-      command: mvn -f /home/ubuntu/spring-boot-app/pom.xml clean install
-
-    - name: Copy WAR file to Tomcat
+    - name: Copy WAR file from Ansible controller to new instance
       copy:
-        src: /home/ubuntu/spring-boot-app/target/your-app.war
-        dest: /var/lib/tomcat8/webapps/your-app.war
+        src: /tmp/jenkins/workspace/Build-and-Deploy/target/SpringMVCCRUDApp.war
+        dest: /var/lib/jetty9/webapps/SpringMVCCRUDApp.war
 
-    - name: Restart Tomcat
+    - name: Restart Jetty
       service:
-        name: tomcat9
+        name: jetty9
         state: restarted
+
+    - name: Show public IP
+      debug:
+        msg: "Application is accessible at http://{{ ansible_host }}:8080"
