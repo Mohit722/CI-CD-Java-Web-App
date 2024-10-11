@@ -40,11 +40,12 @@ provisioner "remote-exec" {
     "if curl -s http://localhost:8080; then echo 'Jetty installation successful.'; else echo 'Jetty installation failed.'; fi"
   ]
 }
-}
+
 
 provisioner "local-exec" {
     command = "echo 'EC2 instance created and Jetty server configured'"
   }
+}
 
 output "instance_public_ip" {
   value = aws_instance.app_instance.public_ip
