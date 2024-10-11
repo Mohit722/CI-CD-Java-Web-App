@@ -14,6 +14,8 @@ resource "aws_instance" "app_instance" {
 
   user_data = <<-EOF
     #!/bin/bash
+    set -e  # Exit immediately if a command exits with a non-zero status
+
     # Update the package list and install OpenJDK 11
     sudo apt update
     sudo apt install -y openjdk-11-jdk
@@ -32,8 +34,11 @@ resource "aws_instance" "app_instance" {
     sudo ufw allow 8080
 
     # Verify Jetty installation
-    curl http://localhost:8080 || echo "Jetty installation failed."
-
+    if curl -s http://localhost:8080; then
+      echo "Jetty installation successful."
+    else
+      echo "Jetty installation failed."
+    fi
   EOF
 
   provisioner "local-exec" {
