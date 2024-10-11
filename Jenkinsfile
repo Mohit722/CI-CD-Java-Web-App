@@ -39,7 +39,7 @@ pipeline {
             agent { label 'CMT' } // Use a Jenkins agent with Maven installed
             steps {
                 // Clone the code from the GitHub repository
-                git url: 'https://github.com/Mohit722/spring-mvc-crud.git', branch: 'master' // Adjust branch as needed
+                git url: 'https://github.com/Mohit722/vtdemo.git', branch: 'master' // Adjust branch as needed
 
                 echo "Building War Component..."
                     dir("${WORKSPACE}") { // Ensure this is the correct path within the repo
