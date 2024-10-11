@@ -30,19 +30,16 @@ pipeline {
             }
         }
         stage('Retrieve Public IP') {
-          agent { label 'IAC' }
-          steps {
-             script {
-               // Fetch the public IP from Terraform output
-               env.INSTANCE_PUBLIC_IP = sh(script: 'terraform output -raw instance_public_ip', returnStdout: true).trim()
-               if (env.INSTANCE_PUBLIC_IP) {
-                  echo "New instance public IP: ${env.INSTANCE_PUBLIC_IP}"
-               } else {
-                 error("Failed to retrieve the public IP from Terraform.")
+            agent { label 'IAC' }
+            steps {
+                script {
+                    // Fetch the public IP from Terraform output
+                    env.INSTANCE_PUBLIC_IP = sh(script: 'terraform output -raw instance_public_ip', returnStdout: true).trim()
+                    echo "New instance public IP: ${env.INSTANCE_PUBLIC_IP}"
+                }
             }
         }
-    }
-}
+
 
 
         stage('Maven Build and Test') {
