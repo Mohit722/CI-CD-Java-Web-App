@@ -25,6 +25,7 @@ pipeline {
                             echo "Public IP Retrieved: ${env.INSTANCE_PUBLIC_IP}"
                         } else if (params.ACTION == 'destroy') {
                             sh 'terraform destroy -auto-approve'
+                            error("Resources destroyed. Stopping further execution.") // Stop the pipeline
                         } else {
                             error("Invalid ACTION parameter")
                         }
